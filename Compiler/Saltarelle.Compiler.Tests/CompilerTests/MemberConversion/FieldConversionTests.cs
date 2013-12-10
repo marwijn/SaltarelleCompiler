@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using ICSharpCode.NRefactory.TypeSystem;
 using NUnit.Framework;
-using Saltarelle.Compiler.JSModel.Expressions;
 using Saltarelle.Compiler.ScriptSemantics;
 
 namespace Saltarelle.Compiler.Tests.CompilerTests.MemberConversion {
@@ -22,7 +21,7 @@ namespace Saltarelle.Compiler.Tests.CompilerTests.MemberConversion {
 			var metadataImporter = new MockMetadataImporter { GetConstructorSemantics = c => ConstructorScriptSemantics.Unnamed(skipInInitializer: c.DeclaringType.IsKnownType(KnownTypeCode.Object)), GetFieldSemantics = f => FieldScriptSemantics.Field("$SomeProp") };
 			Compile(new[] { "class C { public static int SomeField; }" }, metadataImporter: metadataImporter);
 			FindStaticFieldInitializer("C.$SomeProp").Should().NotBeNull();
-			((JsFunctionDefinitionExpression)FindClass("C").UnnamedConstructor).Body.Statements.Should().BeEmpty();
+			FindClass("C").UnnamedConstructor.Body.Statements.Should().BeEmpty();
 			FindClass("C").InstanceMethods.Should().BeEmpty();
 			FindClass("C").StaticMethods.Should().BeEmpty();
 		}
@@ -31,7 +30,7 @@ namespace Saltarelle.Compiler.Tests.CompilerTests.MemberConversion {
 		public void FieldsThatAreNotUsableFromScriptAreNotImported() {
 			var metadataImporter = new MockMetadataImporter { GetConstructorSemantics = c => ConstructorScriptSemantics.Unnamed(skipInInitializer: c.DeclaringType.IsKnownType(KnownTypeCode.Object)), GetFieldSemantics = f => FieldScriptSemantics.NotUsableFromScript() };
 			Compile(new[] { "class C { public int SomeField; }" }, metadataImporter: metadataImporter);
-			((JsFunctionDefinitionExpression)FindClass("C").UnnamedConstructor).Body.Statements.Should().BeEmpty();
+			FindClass("C").UnnamedConstructor.Body.Statements.Should().BeEmpty();
 			FindClass("C").StaticInitStatements.Should().BeEmpty();
 			FindClass("C").InstanceMethods.Should().BeEmpty();
 			FindClass("C").StaticMethods.Should().BeEmpty();

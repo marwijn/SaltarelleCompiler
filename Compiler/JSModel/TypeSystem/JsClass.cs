@@ -14,14 +14,14 @@ namespace Saltarelle.Compiler.JSModel.TypeSystem {
 	/// A class, interface or struct.
 	/// </summary>
 	public class JsClass : JsType {
-		private JsExpression _unnamedConstructor;
+		private JsFunctionDefinitionExpression _unnamedConstructor;
 
 		public IList<JsNamedConstructor> NamedConstructors { get; private set; }
 		public IList<JsMethod> InstanceMethods { get; private set; }
 		public IList<JsMethod> StaticMethods { get; private set; }
 		public IList<JsStatement> StaticInitStatements { get; private set; }
 
-		public JsExpression UnnamedConstructor {
+		public JsFunctionDefinitionExpression UnnamedConstructor {
 			get { return _unnamedConstructor; }
 			set {
 				if (Frozen)
